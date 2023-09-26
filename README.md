@@ -9,9 +9,20 @@ O projeto CCU-Braskem é uma iniciativa focada no desenvolvimento de ferramentas
 O repositório está estruturado da seguinte maneira:
 
 - `src/`: Contém todos os scripts Python desenvolvidos para o projeto.
+  - `add_adsorbate/`: Scripts relacionados à adição de adsorbato.
+    - `add_adsorbate.py`: Script principal para adicionar adsorbato.
+    - `README.md`: Documentação específica para adicionar adsorbato.
+    - `requirements.txt`: Lista de requisitos para o script de adicionar adsorbato.
+  - `predict_energy/`: Scripts relacionados à previsão de energia.
+    - `mol2vec_usage.ipynb`: Jupyter Notebook demonstrando o uso de mol2vec para previsão de energia.
+    - `data/`: Diretório para armazenar dados relacionados à previsão de energia.
+      - `CO2_DB.csv`: Conjunto de dados para previsão de energia.
+      - `model_300dim.pkl`: Modelo de previsão de energia em formato pickle.
 - `data/`: Diretório para armazenar arquivos de dados usados e gerados pelos scripts.
 - `docs/`: Contém documentação detalhada para cada script, incluindo descrições, requisitos e exemplos de uso.
 - `tests/`: Diretório que contém testes unitários para validar a funcionalidade dos scripts.
+- `LICENSE`: Arquivo de licença MIT para o projeto.
+- `README.md`: Este arquivo que você está lendo.
 
 ## Requisitos
 
@@ -29,9 +40,9 @@ Cada script no diretório `src/` é um utilitário independente que pode ser exe
 
 Para usar o script `add_adsorbate.py`, você usaria um comando como o seguinte:
 
-```
+```bash
 cd src/add_adsorbate
-python src/add_adsorbate.py input_poscar_path output_poscar_path H top 1.0
+python add_adsorbate.py input_poscar_path output_poscar_path H top 1.0
 ```
 
 ## Contribuindo
@@ -50,3 +61,5 @@ Para qualquer dúvida ou feedback, por favor, entre em contato com a equipe de d
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+I've updated the README.md to reflect the new directory structure and provide information about the contents of each directory.

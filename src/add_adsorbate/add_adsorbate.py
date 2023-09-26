@@ -4,13 +4,12 @@ Author: João V. V. Cassiano
 Date: 14-09-2023
 Version: 1.0.0
 Description: 
-    Este script adiciona um adsorvato a uma superfície em todas as posições possíveis de um tipo de site especificado.
-    O script aceita cinco argumentos de linha de comando: o caminho para o arquivo POSCAR de entrada, o caminho para o arquivo POSCAR de saída, 
-    o símbolo do átomo adsorvato, o tipo de site e a altura acima do site para colocar o adsorvato.
+    This script adds an adsorbate to a surface at all possible positions of a specified site type.
+    The script accepts five command-line arguments: the path to the input POSCAR file, the path to the output POSCAR file, 
+    the symbol of the adsorbate atom, the site type, and the height above the site to place the adsorbate.
 Usage:
     python add_adsorbate.py input_poscar_path output_poscar_path adsorbate_atom site height
 """
-
 
 import argparse
 from ase import Atoms
@@ -41,26 +40,32 @@ def add_adsorbate_to_poscar(input_poscar, output_poscar, adsorbate_atom, site, h
     # Create the adsorbate
     adsorbate = Atoms(adsorbate_atom)
 
-    # Identify the surface atoms (e.g., atoms with the highest z-coordinate)
-    z_coords = [atom.position[2] for atom in slab]
-    max_z = max(z_coords)
-    surface_atoms = [i for i, atom in enumerate(slab) if atom.position[2] == max_z]
+
+    # Change the Z deviation
+    z_values = atom.positions[:,2]
+    z_values.sort()
+    delta_z = z_values[1] - z_values[0]
+
+    # Identify the surface atoms with a small deviation from the maximum z-coordinate
+    max_z = max(atom.position[2] for atom in slab)
+
+    surface_atoms = [atom for atom in slab if abs(atom.position[2] - max_z) < delta_z / 4]
 
     # Define a list to store all possible positions for the specified site type
     positions = []
 
     # Find all possible positions for the specified site type
     if site == 'top':
-        for i in surface_atoms:
-            positions.append(slab[i].position[:2])
+        for atom in surface_atoms:
+            positions.append(atom.position[:2])
     elif site == 'bridge':
-        for i in surface_atoms:
-            for j in surface_atoms:
+        for i, atom1 in enumerate(surface_atoms):
+            for j, atom2 in enumerate(surface_atoms):
                 if i < j:
-                    positions.append((slab[i].position[:2] + slab[j].position[:2]) / 2)
+                    positions.append((atom1.position[:2] + atom2.position[:2]) / 2)
     elif site == 'hole':
         # Get the 2D positions of the surface atoms
-        surface_positions = [slab[i].position[:2] for i in surface_atoms]
+        surface_positions = [atom.position[:2] for atom in surface_atoms]
 
         # Find the Delaunay triangulation of the surface positions
         tri = Delaunay(surface_positions)
